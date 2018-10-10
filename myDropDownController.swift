@@ -11,18 +11,27 @@ import UIKit
 protocol myDropDownControllerDelegate {
     func reloadData()
 }
-// 
+//
 public enum position {
     case top
     case bottom
 }
 
-
 public class myDropDownController: UIViewController {
 
     
+    private var myView : UIView                   = UIView()
+    
+    //  We create table view and reload data
+    fileprivate var myTableView : UITableView! {
+        didSet {
+            self.myTableView.reloadData()
+        }
+    }
+    
     public var yourView: UIView                   = UIView()
     public var yourTextField: UITextField         = UITextField()
+    
     public var yourList: [String]                 = []
     
     // Custom variable
@@ -31,20 +40,14 @@ public class myDropDownController: UIViewController {
     public var CornerRadius:CGFloat               = 2
     
     
-    private var myView : UIView                   = UIView()
-    
     
     // Closures
-    fileprivate var privateDidSelect: (String, Int) -> () = {option, index in }
+    fileprivate var privateDidSelect: (String, Int) -> () = {listName, index in }
     
     
     
-    //We create table view and reload data
-    fileprivate var myTableView : UITableView! {
-        didSet {
-            self.myTableView.reloadData()
-        }
-    }
+
+    
     var delegate: myDropDownControllerDelegate?
 
    
@@ -53,29 +56,34 @@ public class myDropDownController: UIViewController {
     }
     
     
-    //We create view and tableview.
+    //  We create view and tableview.
     public func create(pos:position = position.bottom){
+        // implement textField Configure
+        textFieldConfigure()
         
         myTableView = UITableView()
-//        view.addSubview(my    View)
-//        self.superview?.insertSubview(myView, belowSubview: self)
         self.yourView.insertSubview(myView, at: 0)
         myView.addSubview(myTableView)
+        myView.isHidden     = true
         
         myView.translatesAutoresizingMaskIntoConstraints                  = false
         myTableView.translatesAutoresizingMaskIntoConstraints             = false
+        
         
         myView.layer.borderColor                                          = UIColor.init(hexString: BorderColor)?.cgColor
         myView.layer.borderWidth                                          = BorderWidth
         myView.layer.cornerRadius                                         = CornerRadius
         
+        // Cell Class and Name
         myTableView.register(myDropDownCell.self, forCellReuseIdentifier: "myDropDownCell")
         
+        // TableView Configure
         myTableView.separatorInset = UIEdgeInsets(top: 0,left: 0,bottom: 0,right: 0)
         myTableView.separatorColor = UIColor.clear
         myTableView.delegate       = self
         myTableView.dataSource     = self
         
+        //  Constraint Layout
         myView.leftAnchor.constraint(equalTo:(self.yourTextField.leftAnchor), constant: 5).isActive      = true
         myView.rightAnchor.constraint(equalTo:(self.yourTextField.rightAnchor), constant: -5).isActive   = true
         myView.heightAnchor.constraint(equalToConstant: 140).isActive                                    = true
@@ -84,7 +92,6 @@ public class myDropDownController: UIViewController {
         myTableView.leftAnchor.constraint(equalTo: (myView.leftAnchor), constant: 0).isActive            = true
         myTableView.rightAnchor.constraint(equalTo: (myView.rightAnchor), constant: 0).isActive          = true
         myTableView.bottomAnchor.constraint(equalTo: (myView.bottomAnchor), constant: 0).isActive        = true
-        
         
         
         switch pos {
@@ -101,8 +108,18 @@ public class myDropDownController: UIViewController {
         privateDidSelect = completion
     }
     
+    // textField Configure
+    private func textFieldConfigure(){
+        yourTextField.delegate = self
+    }
+    
 }
 
+//////////////////////////////////////
+///////
+///////////  Cell
+////////////////
+//////////////////////////////////////
 
 class myDropDownCell: UITableViewCell {
     
@@ -112,12 +129,11 @@ class myDropDownCell: UITableViewCell {
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        contentTitle.font                                           = UIFont(name: "Helvetica", size: 13)
-        contentTitle.translatesAutoresizingMaskIntoConstraints      = false
-        contentTitle.textColor                                      = UIColor.init(hexString: "2f3640")
+        contentTitleConfigure()
         
         self.contentView.addSubview(contentTitle)
         
+        // Constraint Layout
         contentTitle.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 5).isActive        = true
         contentTitle.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -5).isActive     = true
         contentTitle.topAnchor.constraint(equalTo: self.topAnchor, constant: 0).isActive          = true
@@ -128,7 +144,23 @@ class myDropDownCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    func contentTitleConfigure(){
+        contentTitle.font                                           = UIFont(name: "Helvetica", size: 13)
+        contentTitle.translatesAutoresizingMaskIntoConstraints      = false
+        contentTitle.textColor                                      = UIColor.init(hexString: "2f3640")
+    }
+    
 }
+
+
+//////////////////////////////////
+/////
+/////       extension
+/////////////////////////////////
+/////
+//////////////////////////////////
+
 
 
 // Extension Class For HEX Color
@@ -158,6 +190,7 @@ extension UIColor {
 
 
 extension myDropDownController:UITableViewDataSource {
+    
     // Table View Row Count
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return yourList.count
@@ -178,11 +211,29 @@ extension myDropDownController:UITableViewDataSource {
 
 extension myDropDownController:UITableViewDelegate {
     
-    
     // TableView SelectRow Method
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         privateDidSelect("\(self.yourList[indexPath.row])", indexPath.row)
     }
     
+}
+
+
+extension myDropDownController:UITextFieldDelegate {
+    
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        print(textField.text?.count)
+        if textField.text?.count ?? 0 > 0 {
+            
+            myView.isHidden = false
+            
+        }else{
+            
+            myView.isHidden = true
+            
+        }
+        
+        return true
+    }
     
 }

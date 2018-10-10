@@ -29,8 +29,9 @@ class ViewController: UIViewController,myDropDownControllerDelegate {
         VC.yourList      = ["Array","Deneme","Hey"]
         VC.yourView      = self.view
         VC.create()
-        
+    
         VC.didSelect { (listName, index) in
+            self.demoTextField.text = listName
             print(listName)
             print(index)
         }
