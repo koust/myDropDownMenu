@@ -29,6 +29,11 @@ class ViewController: UIViewController,myDropDownControllerDelegate {
         VC.yourList      = ["Array","Deneme","Hey"]
         VC.yourView      = self.view
         VC.create()
+        
+        VC.didSelect { (listName, index) in
+            print(listName)
+            print(index)
+        }
     }
     
  
