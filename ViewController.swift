@@ -8,8 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController,myDropDownControllerDelegate {
-
+class ViewController: UIViewController {
     @IBOutlet weak var demoTextField: UITextField!
     
     
@@ -26,7 +25,7 @@ class ViewController: UIViewController,myDropDownControllerDelegate {
         
         
         VC.yourTextField = demoTextField
-        VC.yourList      = ["Array","Deneme","Hey"]
+        VC.yourList      = ["Array","Deneme","Hey","Apple","Las Vegas","Last","Arr","Rr"]
         VC.yourView      = self.view
         VC.create()
     
@@ -34,12 +33,17 @@ class ViewController: UIViewController,myDropDownControllerDelegate {
             self.demoTextField.text = listName
             print(listName)
             print(index)
+            self.filterList()
         }
+        
+
     }
     
- 
-    func reloadData() {
-        reloadData()
+    
+    func filterList(){
+        VC.filterList { (filterList) in
+            print(filterList)
+        }
     }
 }
 
