@@ -9,7 +9,10 @@
 import UIKit
 
 class ViewController: UIViewController {
+
+    
     @IBOutlet weak var demoTextField: UITextField!
+    @IBOutlet weak var didSelectName: UILabel!
     
     
     let VC           = myDropDownController()
@@ -27,12 +30,14 @@ class ViewController: UIViewController {
         VC.yourTextField = demoTextField
         VC.yourList      = ["Array","Deneme","Hey","Apple","Las Vegas","Last","Arr","Rr"]
         VC.yourView      = self.view
-        VC.create()
+        VC.alwaysOpen    = false
+        VC.create(pos: .top)
     
         VC.didSelect { (listName, index) in
             self.demoTextField.text = listName
             print(listName)
             print(index)
+            self.didSelectName.text = listName + " - Index: \(index)"
             self.filterList()
         }
         
@@ -45,5 +50,14 @@ class ViewController: UIViewController {
             print(filterList)
         }
     }
+    
+    @IBAction func showAction(_ sender: Any) {
+        VC.show()
+    }
+    
+    @IBAction func closeAction(_ sender: Any) {
+        VC.close()
+    }
+    
 }
 

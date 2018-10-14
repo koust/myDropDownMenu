@@ -8,9 +8,7 @@
 
 import UIKit
 
-protocol myDropDownControllerDelegate {
-    func reloadData()
-}
+
 //
 public enum position {
     case top
@@ -37,6 +35,7 @@ public class myDropDownController: UIViewController {
     public var yourDropDownCell: UITableViewCell.Type           = myDropDownCell.self
     public var yourDropDownforCellIdentifier                    = "myDropDownCell"
     public var yourList: [String]                               = []
+    public var alwaysOpen:Bool                                  = true
     
     // Custom variable
     public var BorderColor:String                               = "f5f5f5"
@@ -47,19 +46,11 @@ public class myDropDownController: UIViewController {
     
     
     // Closures
-    fileprivate var privateDidSelect: (String, Int) -> () = {listName, index in }
-    fileprivate var privateFilterList: ([String]) -> () = {filterList in}
-    
-    
+    fileprivate var privateDidSelect: (String, Int) -> ()       = {listName, index in }
+    fileprivate var privateFilterList: ([String]) -> ()         = {filterList in}
     
 
-    
-    var delegate: myDropDownControllerDelegate?
 
-   
-    func reloadDataAction() {
-        self.delegate?.reloadData()
-    }
     
     
     //  We create view and tableview.
@@ -67,8 +58,9 @@ public class myDropDownController: UIViewController {
         // implement textField Configure
         textFieldConfigure()
         
-        myTableView = UITableView()
+        myTableView             = UITableView()
         self.yourView.insertSubview(myView, at: 0)
+        myView.layer.zPosition  = .greatestFiniteMagnitude
         myView.addSubview(myTableView)
 
         
@@ -88,7 +80,7 @@ public class myDropDownController: UIViewController {
         
         // TableView Configure
         myTableView.separatorInset = UIEdgeInsets(top: 0,left: 0,bottom: 0,right: 0)
-        myTableView.separatorColor = UIColor.clear
+        myTableView.separatorColor = UIColor.init(hexString: "#f5f5f5")
         myTableView.delegate       = self
         myTableView.dataSource     = self
         
@@ -121,6 +113,14 @@ public class myDropDownController: UIViewController {
     
     public func filterList(completion: @escaping(_ filterList:[String]) -> ()) {
         privateFilterList = completion
+    }
+    
+    public func show(){
+        dropDownAnimation(status:true)
+    }
+    
+    public func close(){
+        dropDownAnimation(status: false)
     }
     
     // textField Configure
@@ -205,18 +205,26 @@ class myDropDownCell: UITableViewCell {
 
 extension myDropDownController:UITableViewDataSource {
     
+    
     // Table View Row Count
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if searchList.count == 0 {
+            return 1
+        }
         return searchList.count
     }
     
     // TableView Cell Content
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = myTableView.dequeueReusableCell(withIdentifier: yourDropDownforCellIdentifier) as! myDropDownCell
-        
+        if searchList.count == 0 {
+         
+            cell.selectionStyle                             = .none
+            cell.contentTitle.text                          = "We could not find"
+            return cell
+        }
         cell.selectionStyle                             = .none
         cell.contentTitle.text                          = searchList[indexPath.row]
-        
         return cell
     }
     
@@ -242,7 +250,7 @@ extension myDropDownController:UITextFieldDelegate {
             self.dropDownAnimation(status: true)
             
         }else{
-            self.dropDownAnimation(status: false)
+            self.dropDownAnimation(status: alwaysOpen)
             
         }
         self.myTableView.reloadData()
