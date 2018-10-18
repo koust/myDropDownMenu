@@ -21,6 +21,7 @@ public class myDropDownController: UIViewController {
     private var myView : UIView                   = UIView()
     private var dropDownHeightConstant : NSLayoutConstraint?
     private var searchList:[String]               = []
+    private var backgroundView:UIView?
     
     //  We create table view and reload data
     fileprivate var myTableView : UITableView! {
@@ -40,7 +41,7 @@ public class myDropDownController: UIViewController {
     // Custom variable
     public var BorderColor:String                               = "f5f5f5"
     public var BorderWidth:CGFloat                              = 1.0
-    public var CornerRadius:CGFloat                             = 2
+    public var CornerRadius:CGFloat                             = 10
     public var dropDownHeight:CGFloat                           = 0
     public var dropDownAnimation:UIViewAnimationOptions         = [.curveEaseInOut]
     
@@ -60,14 +61,16 @@ public class myDropDownController: UIViewController {
         
         myTableView             = UITableView()
         self.yourView.insertSubview(myView, at: 0)
-        myView.layer.zPosition  = .greatestFiniteMagnitude
+        myView.layer.zPosition          = 5
+        yourTextField.layer.zPosition   = 5
+        yourView.layer.zPosition        = 1
         myView.addSubview(myTableView)
 
         
         myView.translatesAutoresizingMaskIntoConstraints                  = false
         myTableView.translatesAutoresizingMaskIntoConstraints             = false
         
-        
+        myView.clipsToBounds                                              = true
         myView.layer.borderColor                                          = UIColor.init(hexString: BorderColor)?.cgColor
         myView.layer.borderWidth                                          = BorderWidth
         myView.layer.cornerRadius                                         = CornerRadius
@@ -123,6 +126,7 @@ public class myDropDownController: UIViewController {
         dropDownAnimation(status: false)
     }
     
+    
     // textField Configure
     private func textFieldConfigure(){
         yourTextField.delegate = self
@@ -137,7 +141,27 @@ public class myDropDownController: UIViewController {
         }
     }
     
+    private func viewBackground(){
+        backgroundView = UIView(frame: CGRect(x: 0, y: 0, width: yourView.frame.size.width, height: yourView.frame.size.height))
+        
+        yourView.insertSubview(backgroundView!, at: 0)
+        
+        backgroundView?.backgroundColor = UIColor.init(hexString: "#000000")
+        backgroundView?.alpha           = 0.5
+        
+        backgroundView?.layer.zPosition = 4
+        
+        let gesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
+        backgroundView?.addGestureRecognizer(gesture)
+        
+    }
+    
+    @objc private func viewTapped(){
+//        self.dropDownAnimation(status:false)
+    }
+    
     private func dropDownAnimation(status:Bool){
+    
         
         UIView.animate(withDuration: 0.3, delay:0, options: [dropDownAnimation], animations: {
                 if status{
@@ -257,6 +281,18 @@ extension myDropDownController:UITextFieldDelegate {
         return true
     }
     
+    public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
+        self.viewBackground()
+        return true
+    }
+    
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        
+        self.backgroundView?.removeFromSuperview()
+        self.yourView.endEditing(true)
+        self.dropDownAnimation(status:false)
+        return true
+    }
 }
 
 
