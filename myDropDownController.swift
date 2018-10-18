@@ -162,7 +162,7 @@ public class myDropDownController: UIViewController {
     
     private func dropDownAnimation(status:Bool){
     
-        
+        // Status : true -> Show || false -> Hide
         UIView.animate(withDuration: 0.3, delay:0, options: [dropDownAnimation], animations: {
                 if status{
                     self.dropDownHeight                      = 140
@@ -271,11 +271,11 @@ extension myDropDownController:UITextFieldDelegate {
     public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         searchKeyword()
         if searchList.count > 0 {
+            
             self.dropDownAnimation(status: true)
-            
         }else{
-            self.dropDownAnimation(status: alwaysOpen)
             
+            self.dropDownAnimation(status: alwaysOpen)
         }
         self.myTableView.reloadData()
         return true
@@ -288,9 +288,18 @@ extension myDropDownController:UITextFieldDelegate {
     
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
+        
         self.backgroundView?.removeFromSuperview()
+        
         self.yourView.endEditing(true)
         self.dropDownAnimation(status:false)
+        
+        
+        // it gets first element in the array if the content does not match
+        if self.searchList.contains(where: {$0 != yourTextField.text}) {
+            self.yourTextField.text = self.searchList.first            
+            privateDidSelect("\(self.searchList[0])", 0)
+        }
         return true
     }
 }
