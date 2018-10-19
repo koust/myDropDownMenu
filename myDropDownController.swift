@@ -76,6 +76,7 @@ public class myDropDownController: UIViewController {
         myView.layer.cornerRadius                                         = CornerRadius
         
         
+        yourTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
         //  myView.dropShadow(color: UIColor.black, opacity: 1, offSet: CGSize(width: -3, height: -1), radius: 3, scale: true)
         
         // Cell Class and Name
@@ -157,7 +158,7 @@ public class myDropDownController: UIViewController {
     }
     
     @objc private func viewTapped(){
-//        self.dropDownAnimation(status:false)
+        self.animationHide()
     }
     
     private func dropDownAnimation(status:Bool){
@@ -177,6 +178,21 @@ public class myDropDownController: UIViewController {
             completion: nil
         )
         
+    }
+    
+    
+    private func animationHide(){
+        self.backgroundView?.removeFromSuperview()
+        
+        self.yourView.endEditing(true)
+        self.dropDownAnimation(status:false)
+        
+        
+        // it gets first element in the array if the content does not match
+        if self.searchList.contains(where: {$0.lowercased() != yourTextField.text?.lowercased()}) {
+            self.yourTextField.text = self.searchList.first
+            privateDidSelect("\(self.searchList[0])", 0)
+        }
     }
     
 }
@@ -268,18 +284,22 @@ extension myDropDownController:UITableViewDelegate {
 
 extension myDropDownController:UITextFieldDelegate {
     
-    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        searchKeyword()
-        if searchList.count > 0 {
-            
-            self.dropDownAnimation(status: true)
-        }else{
-            
-            self.dropDownAnimation(status: alwaysOpen)
-        }
-        self.myTableView.reloadData()
-        return true
+    
+    @objc func textFieldDidChange(_ textField: UITextField) {
+            self.searchKeyword()
+        
+            if searchList.count > 0 {
+                
+                self.dropDownAnimation(status: true)
+            }else{
+                
+                self.dropDownAnimation(status: alwaysOpen)
+            }
+            self.myTableView.reloadData()
+     
     }
+    
+
     
     public func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
         self.viewBackground()
@@ -288,18 +308,9 @@ extension myDropDownController:UITextFieldDelegate {
     
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         
-        
-        self.backgroundView?.removeFromSuperview()
-        
-        self.yourView.endEditing(true)
-        self.dropDownAnimation(status:false)
-        
-        
-        // it gets first element in the array if the content does not match
-        if self.searchList.contains(where: {$0 != yourTextField.text}) {
-            self.yourTextField.text = self.searchList.first            
-            privateDidSelect("\(self.searchList[0])", 0)
-        }
+        self.animationHide()
+
+
         return true
     }
 }
