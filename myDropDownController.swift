@@ -67,7 +67,7 @@ public class myDropDownController: UIViewController {
     
     
     //  We create view and tableview.
-    public func create(pos:position = position.bottom){
+    public func create(position:position = position.bottom,positonAuto:Bool = true){
         // implement textField Configure
         textFieldConfigure()
         myTableView             = UITableView()
@@ -110,15 +110,9 @@ public class myDropDownController: UIViewController {
         myTableView.rightAnchor.constraint(equalTo: (myView.rightAnchor), constant: 0).isActive          = true
         myTableView.bottomAnchor.constraint(equalTo: (myView.bottomAnchor), constant: 0).isActive        = true
         
+
         
-        switch pos {
-        case .top:
-            myView.bottomAnchor.constraint(equalTo: (self.yourTextField.topAnchor), constant: -5).isActive  = true
-        case .bottom:
-            myView.topAnchor.constraint(equalTo: (self.yourTextField.bottomAnchor), constant: 5).isActive   = true
-            
-        }
-        
+        self.dropDownPosition(position: position, positonAuto: positonAuto)
     }
     
     public func didSelect(completion: @escaping (_ listName: String, _ index: Int) -> ()) {
@@ -130,6 +124,7 @@ public class myDropDownController: UIViewController {
     }
     
     public func show(){
+        viewBackground()
         dropDownAnimation(status:true)
     }
     
@@ -137,8 +132,26 @@ public class myDropDownController: UIViewController {
         dropDownAnimation(status: false)
     }
     
-    
     // textField Configure
+    private func dropDownPosition(position:position,positonAuto:Bool){
+        
+        var position = position
+        
+        if positonAuto == true {
+            position    = snapDropDownPosition()
+            
+        }
+        
+        switch position {
+        case .top:
+            myView.bottomAnchor.constraint(equalTo: (self.yourTextField.topAnchor), constant: -5).isActive  = true
+        case .bottom:
+            myView.topAnchor.constraint(equalTo: (self.yourTextField.bottomAnchor), constant: 5).isActive   = true
+            
+        }
+    }
+    
+    
     private func textFieldConfigure(){
         yourTextField.delegate = self
     }
@@ -152,18 +165,36 @@ public class myDropDownController: UIViewController {
         }
     }
     
+    private func snapDropDownPosition() -> position {
+        
+       let myViewOriginY          = self.yourTextField.frame.origin.y + self.yourTextField.frame.size.height + 5
+        let myViewMaxY:CGFloat    = 140
+       let deviceMaxY             = self.yourView.frame.size.height
+        
+        if myViewOriginY <= 0 {
+            return position.bottom
+        }else if (myViewMaxY + myViewOriginY) >= deviceMaxY {
+            return position.top
+        }
+        
+        return position.bottom
+    }
+    
     private func viewBackground(){
         backgroundView = UIView(frame: CGRect(x: 0, y: 0, width: yourView.frame.size.width, height: yourView.frame.size.height))
-        
-        yourView.insertSubview(backgroundView!, at: 0)
-        
-        backgroundView?.backgroundColor = UIColor.init(hexString: "#000000")
-        backgroundView?.alpha           = 0.5
-        
-        backgroundView?.layer.zPosition = 4
-        
-        let gesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
-        backgroundView?.addGestureRecognizer(gesture)
+        if self.yourView.viewWithTag(99)  == nil {
+            
+            yourView.insertSubview(backgroundView!, at: 0)
+            
+            backgroundView?.tag             = 99
+            backgroundView?.backgroundColor = UIColor.init(hexString: "#000000")
+            backgroundView?.alpha           = 0.5
+            
+            backgroundView?.layer.zPosition = 4
+            
+            let gesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
+            backgroundView?.addGestureRecognizer(gesture)
+        }
         
     }
     
@@ -172,16 +203,19 @@ public class myDropDownController: UIViewController {
     }
     
     private func dropDownAnimation(status:Bool){
-    
+        
         // Status : true -> Show || false -> Hide
         UIView.animate(withDuration: 0.3, delay:0, options: [dropDownAnimation], animations: {
                 if status{
                     self.dropDownHeight                      = 140
                     self.dropDownHeightConstant?.constant    = self.dropDownHeight
+                 
                 }else{
                     self.dropDownHeight                      = 0
                     self.dropDownHeightConstant?.constant    = self.dropDownHeight
                 }
+            
+            
                 self.yourView.layoutIfNeeded()
                 self.view.layoutIfNeeded()
         },
@@ -192,7 +226,7 @@ public class myDropDownController: UIViewController {
     
     
     private func animationHide(){
-        self.backgroundView?.removeFromSuperview()
+        self.backgroundView?.viewWithTag(99)?.removeFromSuperview()
         
         self.yourView.endEditing(true)
         self.dropDownAnimation(status:false)
@@ -200,8 +234,10 @@ public class myDropDownController: UIViewController {
         self.searchList = self.searchList.map{$0.lowercased()}
         // it gets first element in the array if the content does not match
         if !self.searchList.contains(yourTextField.text?.lowercased() ?? "") {
-            self.yourTextField.text = self.searchList.first
-            privateDidSelect("\(self.searchList[0])", 0)
+            if self.searchList.count > 0 {
+                self.yourTextField.text = self.searchList.first
+                privateDidSelect("\(self.searchList[0])", 0)
+            }
         }
     }
     
@@ -288,6 +324,7 @@ extension myDropDownController:UITableViewDelegate {
         if searchList.count > 0 {
             privateDidSelect("\(self.searchList[indexPath.row])", indexPath.row)
             privateFilterList(searchList)
+            animationHide()
         }
     }
     

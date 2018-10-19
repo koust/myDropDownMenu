@@ -31,7 +31,8 @@ class ViewController: UIViewController {
         VC.yourList      = ["Array","Deneme","Hey","Apple0","Apple1","Las Vegas","Last","Arr","Rr"]
         VC.yourView      = self.view
         VC.alwaysOpen    = false
-        VC.create(pos: .top)
+        VC.create(position: .top,positonAuto: false)
+        
     
         VC.didSelect { (listName, index) in
             self.demoTextField.text = listName
