@@ -9,11 +9,23 @@
 import UIKit
 
 
-//
+// Drop down position
 public enum position {
     case top
     case bottom
 }
+
+// --> Main Controller 
+// ----> All variable
+// ------> Create
+// ------> Closures
+// ------> Show Method
+// ------> Hide Method
+// ------> Search Filter Method
+// ------> Background and Drop Down Animation
+
+// --> Main Cell Class
+
 
 public class myDropDownController: UIViewController {
 
@@ -58,14 +70,12 @@ public class myDropDownController: UIViewController {
     public func create(pos:position = position.bottom){
         // implement textField Configure
         textFieldConfigure()
-        
         myTableView             = UITableView()
         self.yourView.insertSubview(myView, at: 0)
         myView.layer.zPosition          = 5
         yourTextField.layer.zPosition   = 5
         yourView.layer.zPosition        = 1
         myView.addSubview(myTableView)
-
         
         myView.translatesAutoresizingMaskIntoConstraints                  = false
         myTableView.translatesAutoresizingMaskIntoConstraints             = false
@@ -187,9 +197,9 @@ public class myDropDownController: UIViewController {
         self.yourView.endEditing(true)
         self.dropDownAnimation(status:false)
         
-        
+        self.searchList = self.searchList.map{$0.lowercased()}
         // it gets first element in the array if the content does not match
-        if self.searchList.contains(where: {$0.lowercased() != yourTextField.text?.lowercased()}) {
+        if !self.searchList.contains(yourTextField.text?.lowercased() ?? "") {
             self.yourTextField.text = self.searchList.first
             privateDidSelect("\(self.searchList[0])", 0)
         }
@@ -275,10 +285,15 @@ extension myDropDownController:UITableViewDelegate {
     
     // TableView SelectRow Method
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        privateDidSelect("\(self.searchList[indexPath.row])", indexPath.row)
-        privateFilterList(searchList)
+        if searchList.count > 0 {
+            privateDidSelect("\(self.searchList[indexPath.row])", indexPath.row)
+            privateFilterList(searchList)
+        }
     }
     
+ 
+    
+
 }
 
 
@@ -354,3 +369,4 @@ extension UIView {
         layer.rasterizationScale = scale ? UIScreen.main.scale : 1
     }
 }
+
