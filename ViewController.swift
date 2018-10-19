@@ -27,9 +27,9 @@ class ViewController: UIViewController {
         super.viewWillAppear(animated)
         
         
-        VC.yourTextField = demoTextField
-        VC.yourList      = ["Array","Deneme","Hey","Apple0","Apple1","Las Vegas","Last","Arr","Rr"]
-        VC.yourView      = self.view
+            VC.yourTextField = demoTextField
+            VC.yourList      = ["Array","Deneme","Hey","Apple0","Apple1","Las Vegas","Last","Arr","Rr"]
+            VC.yourView      = self.view
         VC.alwaysOpen    = false
         VC.create(position: .top,positonAuto: false)
         

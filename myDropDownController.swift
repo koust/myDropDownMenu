@@ -338,17 +338,15 @@ extension myDropDownController:UITextFieldDelegate {
     
     
     @objc func textFieldDidChange(_ textField: UITextField) {
-            self.searchKeyword()
+        self.searchKeyword()
         
             if searchList.count > 0 {
-                
                 self.dropDownAnimation(status: true)
             }else{
-                
                 self.dropDownAnimation(status: alwaysOpen)
             }
-            self.myTableView.reloadData()
-     
+        
+        self.myTableView.reloadData()
     }
     
 
