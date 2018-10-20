@@ -63,6 +63,27 @@ if you want , you can always keep the pop-up open.
 dropDownVC.alwaysOpen = true
 ```
 
+**Other closures**
+
+Follow dropDown part with this closures
+
+```swift
+dropDownVC.willDidOpen {
+print("will Did Show")
+}
+ 
+dropDownVC.didLoad {
+print("did Load")
+}
+
+dropDownVC.willDidClosed {
+print("will Did Closed")
+}
+```
+
+
+
+
 ```Non optional feature```
 
 it gets first element in the array if the content does not match
@@ -70,11 +91,14 @@ it gets first element in the array if the content does not match
 ## Configure 
 
 ```swift    
-public var BorderColor:String                               = "f5f5f5"
-public var BorderWidth:CGFloat                              = 1.0
-public var CornerRadius:CGFloat                             = 10
-public var dropDownHeight:CGFloat                           = 0
+public var borderColor:String                               = "f5f5f5"
+public var borderWidth:CGFloat                              = 1.0
+public var cornerRadius:CGFloat                             = 10
+public var dropDownHeight:CGFloat                           = 140
+public var dropDownStatus:dropDownHeightStatus              = .auto
 public var dropDownAnimation:UIViewAnimationOptions         = [.curveEaseInOut]
+public var backgroundColor:String                           = "#000000"
+public var backgroundAlpha:CGFloat                          = 0.7    
 ```
 
 ## Release History
