@@ -15,6 +15,11 @@ public enum position {
     case bottom
 }
 
+public enum dropDownHeightStatus {
+    case auto
+    case manual
+}
+
 // --> Main Controller 
 // ----> All variable
 // ------> Create
@@ -34,6 +39,7 @@ public class myDropDownController: UIViewController {
     private var dropDownHeightConstant : NSLayoutConstraint?
     private var searchList:[String]               = []
     private var backgroundView:UIView?
+    private var keyboardHeight:CGFloat?
     
     //  We create table view and reload data
     fileprivate var myTableView : UITableView! {
@@ -54,10 +60,12 @@ public class myDropDownController: UIViewController {
     public var borderColor:String                               = "f5f5f5"
     public var borderWidth:CGFloat                              = 1.0
     public var cornerRadius:CGFloat                             = 10
-    public var dropDownHeight:CGFloat                           = 0
+    public var dropDownHeight:CGFloat                           = 140
+    public var dropDownStatus:dropDownHeightStatus              = .auto
     public var dropDownAnimation:UIViewAnimationOptions         = [.curveEaseInOut]
     public var backgroundColor:String                           = "#000000"
     public var backgroundAlpha:CGFloat                          = 0.7
+    
     
     
     // Closures
@@ -91,7 +99,6 @@ public class myDropDownController: UIViewController {
         
         
         yourTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
-        //  myView.dropShadow(color: UIColor.black, opacity: 1, offSet: CGSize(width: -3, height: -1), radius: 3, scale: true)
         
         // Cell Class and Name
         myTableView.register(yourDropDownCell, forCellReuseIdentifier:yourDropDownforCellIdentifier)
@@ -106,7 +113,7 @@ public class myDropDownController: UIViewController {
         myView.leftAnchor.constraint(equalTo:(self.yourTextField.leftAnchor), constant: 0).isActive      = true
         myView.rightAnchor.constraint(equalTo:(self.yourTextField.rightAnchor), constant: 0).isActive    = true
         
-        dropDownHeightConstant              = myView.heightAnchor.constraint(equalToConstant: dropDownHeight)
+        dropDownHeightConstant              = myView.heightAnchor.constraint(equalToConstant: 0)
         dropDownHeightConstant?.isActive    = true
         
         myTableView.topAnchor.constraint(equalTo: (myView.topAnchor), constant: 0).isActive              = true
@@ -114,7 +121,19 @@ public class myDropDownController: UIViewController {
         myTableView.rightAnchor.constraint(equalTo: (myView.rightAnchor), constant: 0).isActive          = true
         myTableView.bottomAnchor.constraint(equalTo: (myView.bottomAnchor), constant: 0).isActive        = true
         
-
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillShow),
+            name: NSNotification.Name.UIKeyboardWillShow,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(keyboardWillHide),
+            name: NSNotification.Name.UIKeyboardWillHide,
+            object: nil
+        )
         
         self.dropDownPosition(position: position, positonAuto: positonAuto)
     }
@@ -186,7 +205,7 @@ public class myDropDownController: UIViewController {
     private func snapDropDownPosition() -> position {
         
        let myViewOriginY          = self.yourTextField.frame.origin.y + self.yourTextField.frame.size.height + 5
-        let myViewMaxY:CGFloat    = 140
+       let myViewMaxY:CGFloat     = 140
        let deviceMaxY             = self.yourView.frame.size.height
         
         if myViewOriginY <= 0 {
@@ -222,20 +241,51 @@ public class myDropDownController: UIViewController {
         self.animationHide()
     }
     
+    @objc func keyboardWillShow(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            keyboardHeight        = keyboardRectangle.height
+            
+            
+            self.dropDownHeightConstant?.constant    = self.dropDownHeightStatus()
+            self.yourView.layoutIfNeeded()
+        }
+    }
+    
+    @objc func keyboardWillHide(_ notification: Notification) {
+        if let keyboardFrame: NSValue = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue {
+            let keyboardRectangle = keyboardFrame.cgRectValue
+            keyboardHeight        = 0
+            
+            self.dropDownHeightConstant?.constant    = self.dropDownHeightStatus()
+            self.yourView.layoutIfNeeded()
+        }
+    }
+    
+    private func dropDownHeightStatus() -> CGFloat{
+        if dropDownStatus == .auto {
+            
+            let dropDownAutoHeight  = self.yourView.frame.size.height - self.yourView.frame.origin.y - self.yourTextField.frame.size.height - 90 - (keyboardHeight ?? 0)
+            
+            
+            return dropDownAutoHeight
+        }else {
+            
+            return dropDownHeight
+        }
+    }
+    
     private func dropDownAnimation(status:Bool){
         
         // Status : true -> Show || false -> Hide
         UIView.animate(withDuration: 0.3, delay:0, options: [dropDownAnimation], animations: {
                 if status{
                     self.privateWillDidOpen()
-                    self.dropDownHeight                      = 140
-                    self.dropDownHeightConstant?.constant    = self.dropDownHeight
+                    self.dropDownHeightConstant?.constant    = self.dropDownHeightStatus()
                     self.privateDidLoad()
                 }else{
-                    self.dropDownHeight                      = 0
-                    self.dropDownHeightConstant?.constant    = self.dropDownHeight
+                    self.dropDownHeightConstant?.constant    = 0
                     self.privateDidClosed()
-                    self.animationHide()
                 }
             
             
