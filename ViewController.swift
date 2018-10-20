@@ -30,8 +30,8 @@ class ViewController: UIViewController {
             VC.yourTextField = demoTextField
             VC.yourList      = ["Array","Deneme","Hey","Apple0","Apple1","Las Vegas","Last","Arr","Rr"]
             VC.yourView      = self.view
-        VC.alwaysOpen    = false
-        VC.create(position: .top,positonAuto: false)
+            VC.alwaysOpen    = false
+            VC.create(position: .top,positonAuto: true)
         
     
         VC.didSelect { (listName, index) in
@@ -42,6 +42,18 @@ class ViewController: UIViewController {
             self.filterList()
         }
         
+        VC.willDidOpen {
+            print("will Did Show")
+        }
+        
+        
+        VC.didLoad {
+            print("did Load")
+        }
+        
+        VC.willDidClosed {
+            print("will Did Closed")
+        }
 
     }
     

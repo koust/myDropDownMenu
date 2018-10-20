@@ -61,7 +61,9 @@ public class myDropDownController: UIViewController {
     // Closures
     fileprivate var privateDidSelect: (String, Int) -> ()       = {listName, index in }
     fileprivate var privateFilterList: ([String]) -> ()         = {filterList in}
-    
+    fileprivate var privateWillDidOpen: () -> ()                = { }
+    fileprivate var privateDidLoad: () -> ()                    = { }
+    fileprivate var privateDidClosed: () -> ()                  = { }
 
 
     
@@ -99,8 +101,8 @@ public class myDropDownController: UIViewController {
         myTableView.dataSource     = self
         
         //  Constraint Layout
-        myView.leftAnchor.constraint(equalTo:(self.yourTextField.leftAnchor), constant: 5).isActive      = true
-        myView.rightAnchor.constraint(equalTo:(self.yourTextField.rightAnchor), constant: -5).isActive   = true
+        myView.leftAnchor.constraint(equalTo:(self.yourTextField.leftAnchor), constant: 0).isActive      = true
+        myView.rightAnchor.constraint(equalTo:(self.yourTextField.rightAnchor), constant: 0).isActive    = true
         
         dropDownHeightConstant              = myView.heightAnchor.constraint(equalToConstant: dropDownHeight)
         dropDownHeightConstant?.isActive    = true
@@ -121,6 +123,19 @@ public class myDropDownController: UIViewController {
     
     public func filterList(completion: @escaping(_ filterList:[String]) -> ()) {
         privateFilterList = completion
+    }
+    
+    public func willDidOpen(completion: @escaping() -> ()){
+        privateWillDidOpen = completion
+    }
+    
+    public func didLoad(completion: @escaping() -> ()){
+        privateDidLoad = completion
+    }
+    
+    
+    public func willDidClosed(completion: @escaping() -> ()){
+        privateDidClosed = completion
     }
     
     public func show(){
@@ -207,12 +222,14 @@ public class myDropDownController: UIViewController {
         // Status : true -> Show || false -> Hide
         UIView.animate(withDuration: 0.3, delay:0, options: [dropDownAnimation], animations: {
                 if status{
+                    self.privateWillDidOpen()
                     self.dropDownHeight                      = 140
                     self.dropDownHeightConstant?.constant    = self.dropDownHeight
-                 
+                    self.privateDidLoad()
                 }else{
                     self.dropDownHeight                      = 0
                     self.dropDownHeightConstant?.constant    = self.dropDownHeight
+                    self.privateDidClosed()
                 }
             
             

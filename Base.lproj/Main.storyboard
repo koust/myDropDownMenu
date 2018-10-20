@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rC9-3m-GED">
-                                <rect key="frame" x="15" y="318.5" width="345" height="30"/>
+                                <rect key="frame" x="15" y="76" width="345" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -31,14 +31,14 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RAV-ZX-mkP">
-                                <rect key="frame" x="10" y="388.5" width="172.5" height="30"/>
+                                <rect key="frame" x="10" y="146" width="172.5" height="30"/>
                                 <state key="normal" title="Show"/>
                                 <connections>
                                     <action selector="showAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Jzn-52-6M2"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zdE-XL-iUw">
-                                <rect key="frame" x="192.5" y="388.5" width="172.5" height="30"/>
+                                <rect key="frame" x="192.5" y="146" width="172.5" height="30"/>
                                 <state key="normal" title="Close"/>
                                 <connections>
                                     <action selector="closeAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Bct-6S-Haw"/>
@@ -49,7 +49,7 @@
                         <constraints>
                             <constraint firstItem="zdE-XL-iUw" firstAttribute="leading" secondItem="RAV-ZX-mkP" secondAttribute="trailing" constant="10" id="HAS-Vl-6RX"/>
                             <constraint firstItem="dBo-yu-ZeU" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="15" id="NAT-oo-xde"/>
-                            <constraint firstItem="rC9-3m-GED" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="RMn-LB-rbW"/>
+                            <constraint firstItem="rC9-3m-GED" firstAttribute="top" secondItem="dBo-yu-ZeU" secondAttribute="bottom" constant="20" id="PBD-Fd-0UB"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="rC9-3m-GED" secondAttribute="trailing" constant="15" id="a0q-jj-WFQ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="zdE-XL-iUw" secondAttribute="trailing" constant="10" id="cq8-Xc-Kbx"/>
                             <constraint firstItem="RAV-ZX-mkP" firstAttribute="top" secondItem="rC9-3m-GED" secondAttribute="bottom" constant="40" id="fRb-S9-TlI"/>
