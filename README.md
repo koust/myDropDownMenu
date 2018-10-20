@@ -10,7 +10,7 @@ Mydropdown library is similar to skyscanner app. For example , it's like country
 
 | SkyScanner | myDropDown |
 | ------ | ------ |
-| ![](sky.png) | ![](mydrop.gif) |
+| ![](sky.png) | ![](mydropp.gif) |
 
 ## Manually
   1. Download and drop ```myDropDownController.swift``` in your project.  
