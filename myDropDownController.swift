@@ -301,7 +301,7 @@ public class myDropDownController: UIViewController {
     private func animationHide(){
         
         if self.yourView.viewWithTag(99)  != nil {
-            self.backgroundView?.viewWithTag(99)?.removeFromSuperview()
+            self.yourView.viewWithTag(99)?.removeFromSuperview()
             self.yourView.endEditing(true)
             self.dropDownAnimation(status:false)
             
