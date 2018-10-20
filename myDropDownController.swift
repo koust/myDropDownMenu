@@ -51,11 +51,13 @@ public class myDropDownController: UIViewController {
     public var alwaysOpen:Bool                                  = true
     
     // Custom variable
-    public var BorderColor:String                               = "f5f5f5"
-    public var BorderWidth:CGFloat                              = 1.0
-    public var CornerRadius:CGFloat                             = 10
+    public var borderColor:String                               = "f5f5f5"
+    public var borderWidth:CGFloat                              = 1.0
+    public var cornerRadius:CGFloat                             = 10
     public var dropDownHeight:CGFloat                           = 0
     public var dropDownAnimation:UIViewAnimationOptions         = [.curveEaseInOut]
+    public var backgroundColor:String                           = "#000000"
+    public var backgroundAlpha:CGFloat                          = 0.7
     
     
     // Closures
@@ -83,9 +85,9 @@ public class myDropDownController: UIViewController {
         myTableView.translatesAutoresizingMaskIntoConstraints             = false
         
         myView.clipsToBounds                                              = true
-        myView.layer.borderColor                                          = UIColor.init(hexString: BorderColor)?.cgColor
-        myView.layer.borderWidth                                          = BorderWidth
-        myView.layer.cornerRadius                                         = CornerRadius
+        myView.layer.borderColor                                          = UIColor.init(hexString: borderColor)?.cgColor
+        myView.layer.borderWidth                                          = borderWidth
+        myView.layer.cornerRadius                                         = cornerRadius
         
         
         yourTextField.addTarget(self, action: #selector(textFieldDidChange(_:)), for: .editingChanged)
@@ -144,7 +146,8 @@ public class myDropDownController: UIViewController {
     }
     
     public func close(){
-        dropDownAnimation(status: false)
+        
+        self.animationHide()
     }
     
     // textField Configure
@@ -202,13 +205,15 @@ public class myDropDownController: UIViewController {
             yourView.insertSubview(backgroundView!, at: 0)
             
             backgroundView?.tag             = 99
-            backgroundView?.backgroundColor = UIColor.init(hexString: "#000000")
-            backgroundView?.alpha           = 0.5
+            backgroundView?.backgroundColor = UIColor.init(hexString:backgroundColor)
+            backgroundView?.alpha           = backgroundAlpha
             
             backgroundView?.layer.zPosition = 4
             
             let gesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
             backgroundView?.addGestureRecognizer(gesture)
+        }else{
+            self.backgroundView?.viewWithTag(99)?.removeFromSuperview()
         }
         
     }
@@ -230,6 +235,7 @@ public class myDropDownController: UIViewController {
                     self.dropDownHeight                      = 0
                     self.dropDownHeightConstant?.constant    = self.dropDownHeight
                     self.privateDidClosed()
+                    self.animationHide()
                 }
             
             
@@ -243,19 +249,23 @@ public class myDropDownController: UIViewController {
     
     
     private func animationHide(){
-        self.backgroundView?.viewWithTag(99)?.removeFromSuperview()
         
-        self.yourView.endEditing(true)
-        self.dropDownAnimation(status:false)
-        
-        self.searchList = self.searchList.map{$0.lowercased()}
-        // it gets first element in the array if the content does not match
-        if !self.searchList.contains(yourTextField.text?.lowercased() ?? "") {
-            if self.searchList.count > 0 {
-                self.yourTextField.text = self.searchList.first
-                privateDidSelect("\(self.searchList[0])", 0)
+        if self.yourView.viewWithTag(99)  != nil {
+            self.backgroundView?.viewWithTag(99)?.removeFromSuperview()
+            self.yourView.endEditing(true)
+            self.dropDownAnimation(status:false)
+            
+            self.searchList = self.searchList.map{$0.lowercased()}
+            // it gets first element in the array if the content does not match
+            if !self.searchList.contains(yourTextField.text?.lowercased() ?? "") {
+                if self.searchList.count > 0 {
+                    self.yourTextField.text = self.searchList.first
+                    privateDidSelect("\(self.searchList[0])", 0)
+                }
             }
         }
+        
+       
     }
     
 }

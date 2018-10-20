@@ -19,7 +19,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Search" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="rC9-3m-GED">
-                                <rect key="frame" x="15" y="76" width="345" height="30"/>
+                                <rect key="frame" x="5" y="76" width="365" height="30"/>
                                 <nil key="textColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
@@ -50,7 +50,7 @@
                             <constraint firstItem="zdE-XL-iUw" firstAttribute="leading" secondItem="RAV-ZX-mkP" secondAttribute="trailing" constant="10" id="HAS-Vl-6RX"/>
                             <constraint firstItem="dBo-yu-ZeU" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="15" id="NAT-oo-xde"/>
                             <constraint firstItem="rC9-3m-GED" firstAttribute="top" secondItem="dBo-yu-ZeU" secondAttribute="bottom" constant="20" id="PBD-Fd-0UB"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="rC9-3m-GED" secondAttribute="trailing" constant="15" id="a0q-jj-WFQ"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="rC9-3m-GED" secondAttribute="trailing" constant="5" id="a0q-jj-WFQ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="zdE-XL-iUw" secondAttribute="trailing" constant="10" id="cq8-Xc-Kbx"/>
                             <constraint firstItem="RAV-ZX-mkP" firstAttribute="top" secondItem="rC9-3m-GED" secondAttribute="bottom" constant="40" id="fRb-S9-TlI"/>
                             <constraint firstItem="RAV-ZX-mkP" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="hS4-3u-j1B"/>
@@ -58,7 +58,7 @@
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="dBo-yu-ZeU" secondAttribute="trailing" constant="15" id="l1h-b3-7QG"/>
                             <constraint firstItem="zdE-XL-iUw" firstAttribute="top" secondItem="rC9-3m-GED" secondAttribute="bottom" constant="40" id="pou-fM-0W0"/>
                             <constraint firstItem="rC9-3m-GED" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="sMW-2D-Gwx"/>
-                            <constraint firstItem="rC9-3m-GED" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="yDD-P6-fpU"/>
+                            <constraint firstItem="rC9-3m-GED" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="5" id="yDD-P6-fpU"/>
                             <constraint firstItem="dBo-yu-ZeU" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="15" id="z69-1O-jLV"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>

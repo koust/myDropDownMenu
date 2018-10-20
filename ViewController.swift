@@ -31,6 +31,7 @@ class ViewController: UIViewController {
             VC.yourList      = ["Array","Deneme","Hey","Apple0","Apple1","Las Vegas","Last","Arr","Rr"]
             VC.yourView      = self.view
             VC.alwaysOpen    = false
+            VC.cornerRadius  = 5
             VC.create(position: .top,positonAuto: true)
         
     
