@@ -254,7 +254,6 @@ public class myDropDownController: UIViewController {
     
     @objc func keyboardWillHide(_ notification: Notification) {
         if let keyboardFrame: NSValue = notification.userInfo?[UIKeyboardFrameEndUserInfoKey] as? NSValue {
-            let keyboardRectangle = keyboardFrame.cgRectValue
             keyboardHeight        = 0
             
             self.dropDownHeightConstant?.constant    = self.dropDownHeightStatus()
@@ -263,7 +262,7 @@ public class myDropDownController: UIViewController {
     }
     
     private func dropDownHeightStatus() -> CGFloat{
-        if dropDownStatus == .auto {
+        if dropDownStatus == .auto && snapDropDownPosition() == .bottom {
             
             let dropDownAutoHeight  = self.yourView.frame.size.height - self.yourView.frame.origin.y - self.yourTextField.frame.size.height - 90 - (keyboardHeight ?? 0)
             
