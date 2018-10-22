@@ -110,8 +110,8 @@ public class myDropDownController: UIViewController {
         myTableView.dataSource     = self
         
         //  Constraint Layout
-        myView.leftAnchor.constraint(equalTo:(self.yourTextField.leftAnchor), constant: 0).isActive      = true
-        myView.rightAnchor.constraint(equalTo:(self.yourTextField.rightAnchor), constant: 0).isActive    = true
+        myView.leftAnchor.constraint(equalTo:(self.yourView.leftAnchor), constant: 5).isActive      = true
+        myView.rightAnchor.constraint(equalTo:(self.yourView.rightAnchor), constant: -5).isActive    = true
         
         dropDownHeightConstant              = myView.heightAnchor.constraint(equalToConstant: 0)
         dropDownHeightConstant?.isActive    = true
