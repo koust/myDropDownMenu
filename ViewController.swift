@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         
         
             VC.yourTextField = demoTextField
-            VC.yourList      = ["Array","Deneme","Hey","Apple0","Apple1","Las Vegas","Last","Arr","Rr"]
+            VC.yourList      = ["Array","Trail Version","Hey","Apple0","Apple1","Las Vegas","Last","Arr","Rr"]
             VC.yourView      = self.view
             VC.alwaysOpen    = false
             VC.cornerRadius  = 5
@@ -43,8 +43,8 @@ class ViewController: UIViewController {
             self.filterList()
         }
         
-        VC.willDidOpen {
-            print("will Did Show")
+        VC.willOpen {
+            print("will Show")
         }
         
         
@@ -52,8 +52,8 @@ class ViewController: UIViewController {
             print("did Load")
         }
         
-        VC.willDidClosed {
-            print("will Did Closed")
+        VC.didClose {
+            print("did Close")
         }
 
     }

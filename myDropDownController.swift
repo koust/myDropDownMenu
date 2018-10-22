@@ -71,9 +71,9 @@ public class myDropDownController: UIViewController {
     // Closures
     fileprivate var privateDidSelect: (String, Int) -> ()       = {listName, index in }
     fileprivate var privateFilterList: ([String]) -> ()         = {filterList in}
-    fileprivate var privateWillDidOpen: () -> ()                = { }
+    fileprivate var privateWillOpen: () -> ()                = { }
     fileprivate var privateDidLoad: () -> ()                    = { }
-    fileprivate var privateDidClosed: () -> ()                  = { }
+    fileprivate var privateDidClose: () -> ()                  = { }
 
 
     
@@ -146,8 +146,8 @@ public class myDropDownController: UIViewController {
         privateFilterList = completion
     }
     
-    public func willDidOpen(completion: @escaping() -> ()){
-        privateWillDidOpen = completion
+    public func willOpen(completion: @escaping() -> ()){
+        privateWillOpen = completion
     }
     
     public func didLoad(completion: @escaping() -> ()){
@@ -155,8 +155,8 @@ public class myDropDownController: UIViewController {
     }
     
     
-    public func willDidClosed(completion: @escaping() -> ()){
-        privateDidClosed = completion
+    public func didClose(completion: @escaping() -> ()){
+        privateDidClose = completion
     }
     
     public func show(){
@@ -279,12 +279,12 @@ public class myDropDownController: UIViewController {
         // Status : true -> Show || false -> Hide
         UIView.animate(withDuration: 0.3, delay:0, options: [dropDownAnimation], animations: {
                 if status{
-                    self.privateWillDidOpen()
+                    self.privateWillOpen()
                     self.dropDownHeightConstant?.constant    = self.dropDownHeightStatus()
                     self.privateDidLoad()
                 }else{
                     self.dropDownHeightConstant?.constant    = 0
-                    self.privateDidClosed()
+                    self.privateDidClose()
                 }
             
             
