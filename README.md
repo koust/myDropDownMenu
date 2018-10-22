@@ -23,7 +23,7 @@ This simplest usage.
 ```swift
  let dropDownVC            = myDropDownController()
  dropDownVC.yourTextField = demoTextField 
- dropDownVC.yourList      = ["Array","Deneme","Hey","Apple0","Apple1","Las Vegas","Last","Arr","Rr"]
+ dropDownVC.yourList      = ["Array","Trail Version","Hey","Apple0","Apple1","Las Vegas","Last","Arr","Rr"]
  dropDownVC.yourView      = self.view
  dropDownVC.create()
 ```
@@ -36,7 +36,7 @@ Create method have two parameters. These are position and position auto. It's fe
 dropDownVC.create(position: .top,positonAuto: false)
 ```
 
-returns the selected items (```list name and index ``` )
+returns the selected items (```listName and index ``` )
 
 ```swift
 dropDownVC.didSelect { (listName, index) in
@@ -68,16 +68,16 @@ dropDownVC.alwaysOpen = true
 Follow dropDown part with this closures
 
 ```swift
-dropDownVC.willDidOpen {
-print("will Did Show")
+dropDownVC.willOpen {
+print("will Show")
 }
  
 dropDownVC.didLoad {
 print("did Load")
 }
 
-dropDownVC.willDidClosed {
-print("will Did Closed")
+dropDownVC.didClose {
+print("Did Close")
 }
 ```
 
