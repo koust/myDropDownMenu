@@ -23,7 +23,7 @@ This simplest usage.
 ```swift
  let dropDownVC            = myDropDownController()
  dropDownVC.yourTextField = demoTextField 
- dropDownVC.yourList      = ["Array","Trail Version","Hey","Apple0","Apple1","Las Vegas","Last","Arr","Rr"]
+ dropDownVC.yourList      = ["Trail Version","Hey","Apple0","Apple1","Las Vegas","Last","Arr","Rr"]
  dropDownVC.yourView      = self.view
  dropDownVC.create()
 ```
