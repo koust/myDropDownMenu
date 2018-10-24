@@ -62,7 +62,7 @@ public class myDropDownController: UIViewController {
     public var cornerRadius:CGFloat                             = 10
     public var dropDownHeight:CGFloat                           = 140
     public var dropDownStatus:dropDownHeightStatus              = .auto
-    public var dropDownAnimation:UIViewAnimationOptions         = [.curveEaseInOut]
+    public var dropDownAnimation:UIViewAnimationOptions         = []
     public var backgroundColor:String                           = "#000000"
     public var backgroundAlpha:CGFloat                          = 0.7
     
@@ -160,7 +160,6 @@ public class myDropDownController: UIViewController {
     }
     
     public func show(){
-        viewBackground()
         dropDownAnimation(status:true)
     }
     
@@ -220,7 +219,7 @@ public class myDropDownController: UIViewController {
     private func viewBackground(){
         backgroundView = UIView(frame: CGRect(x: 0, y: 0, width: yourView.frame.size.width, height: yourView.frame.size.height))
         if self.yourView.viewWithTag(99)  == nil {
-            
+            backgroundView?.alpha       = 0
             yourView.insertSubview(backgroundView!, at: 0)
             
             backgroundView?.tag             = 99
@@ -231,8 +230,6 @@ public class myDropDownController: UIViewController {
             
             let gesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
             backgroundView?.addGestureRecognizer(gesture)
-        }else{
-            self.backgroundView?.viewWithTag(99)?.removeFromSuperview()
         }
         
     }
@@ -279,9 +276,11 @@ public class myDropDownController: UIViewController {
         // Status : true -> Show || false -> Hide
         UIView.animate(withDuration: 0.3, delay:0, options: [dropDownAnimation], animations: {
                 if status{
+                    self.backgroundView?.alpha               = self.backgroundAlpha
                     self.privateWillOpen()
                     self.dropDownHeightConstant?.constant    = self.dropDownHeightStatus()
                     self.privateDidLoad()
+                    self.viewBackground()
                 }else{
                     self.dropDownHeightConstant?.constant    = 0
                     self.privateDidClose()
@@ -300,7 +299,14 @@ public class myDropDownController: UIViewController {
     private func animationHide(){
         
         if self.yourView.viewWithTag(99)  != nil {
-            self.yourView.viewWithTag(99)?.removeFromSuperview()
+            UIView.animate(withDuration: 0.3, animations: {
+                self.backgroundView?.alpha              = 0
+                self.backgroundView?.backgroundColor    = UIColor.clear
+            })
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.4, execute: {
+                
+                self.yourView.viewWithTag(99)?.removeFromSuperview()
+            })
             self.yourView.endEditing(true)
             self.dropDownAnimation(status:false)
             

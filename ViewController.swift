@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         
         
             VC.yourTextField = demoTextField
-            VC.yourList      = ["Array","Trail Version","Hey","Apple0","Apple1","Las Vegas","Last","Arr","Rr"]
+            VC.yourList      = ["Trail Version","Hey","Apple0","Apple1","Las Vegas","Last","Arr","Rr"]
             VC.yourView      = self.view
             VC.alwaysOpen    = false
             VC.cornerRadius  = 5
