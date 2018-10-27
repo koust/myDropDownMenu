@@ -237,9 +237,9 @@ public class myDropDownController: UIViewController {
     private func viewBackground(){
         backgroundView = UIView(frame: CGRect(x: 0, y: 0, width: yourView.frame.size.width, height: yourView.frame.size.height))
         if self.yourView.viewWithTag(99)  == nil {
-            backgroundView?.alpha       = 0
+            backgroundView?.alpha           = 0
             
-            topLayerForMyView?.tag
+            topLayerForMyView?.tag          = 98
             backgroundView?.tag             = 99
             
             yourView.insertSubview(backgroundView!, at: 0)
@@ -284,8 +284,9 @@ public class myDropDownController: UIViewController {
         if dropDownStatus == .auto && snapDropDownPosition() == .bottom {
             
             let topLayerHeight = CGFloat(self.topLayerForMyView?.frame.size.height ?? 0)
+         
             
-            let dropDownAutoHeight  = self.yourView.frame.size.height - topLayerHeight  - self.yourView.frame.origin.y - self.yourTextField.frame.size.height - 90 - (keyboardHeight ?? 0)
+            let dropDownAutoHeight  = self.yourView.frame.size.height - topLayerHeight  - (self.yourTextField.frame.origin.y) - self.yourTextField.frame.size.height - (keyboardHeight ?? 0)  - 15
             
             
             return dropDownAutoHeight
