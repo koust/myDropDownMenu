@@ -40,6 +40,8 @@ public class myDropDownController: UIViewController {
     private var searchList:[String]               = []
     private var backgroundView:UIView?
     private var keyboardHeight:CGFloat?
+    private var topLayerForMyView:UIView?
+    private var topLayerAlpha:CGFloat?
     
     //  We create table view and reload data
     fileprivate var myTableView : UITableView! {
@@ -83,14 +85,25 @@ public class myDropDownController: UIViewController {
         // implement textField Configure
         textFieldConfigure()
         myTableView             = UITableView()
+        topLayerForMyView       = UIView()
         self.yourView.insertSubview(myView, at: 0)
-        myView.layer.zPosition          = 5
-        yourTextField.layer.zPosition   = 5
-        yourView.layer.zPosition        = 1
+        myView.layer.zPosition              = 5
+        yourTextField.layer.zPosition       = 5
+        topLayerForMyView?.layer.zPosition  = 5
+        
+        topLayerForMyView?.alpha    = 0
+        yourView.layer.zPosition            = 1
+        yourView.addSubview(topLayerForMyView ?? UIView())
         myView.addSubview(myTableView)
+        
+       
+        let triangleLayer   = TriangleLayer()
+        self.topLayerForMyView?.layer.addSublayer(triangleLayer)
+        
         
         myView.translatesAutoresizingMaskIntoConstraints                  = false
         myTableView.translatesAutoresizingMaskIntoConstraints             = false
+        topLayerForMyView?.translatesAutoresizingMaskIntoConstraints      = false
         
         myView.clipsToBounds                                              = true
         myView.layer.borderColor                                          = UIColor.init(hexString: borderColor)?.cgColor
@@ -109,8 +122,13 @@ public class myDropDownController: UIViewController {
         myTableView.delegate       = self
         myTableView.dataSource     = self
         
+        topLayerForMyView?.leftAnchor.constraint(equalTo: self.yourView.leftAnchor, constant: 45).isActive        = true
+        topLayerForMyView?.rightAnchor.constraint(equalTo: self.yourView.rightAnchor, constant: -5).isActive      = true
+        topLayerForMyView?.topAnchor.constraint(equalTo: self.yourTextField.bottomAnchor, constant: 0).isActive   = true
+        topLayerForMyView?.heightAnchor.constraint(equalToConstant: 17).isActive                                  = true
+        
         //  Constraint Layout
-        myView.leftAnchor.constraint(equalTo:(self.yourView.leftAnchor), constant: 5).isActive      = true
+        myView.leftAnchor.constraint(equalTo:(self.yourView.leftAnchor), constant: 5).isActive       = true
         myView.rightAnchor.constraint(equalTo:(self.yourView.rightAnchor), constant: -5).isActive    = true
         
         dropDownHeightConstant              = myView.heightAnchor.constraint(equalToConstant: 0)
@@ -180,9 +198,9 @@ public class myDropDownController: UIViewController {
         
         switch position {
         case .top:
-            myView.bottomAnchor.constraint(equalTo: (self.yourTextField.topAnchor), constant: -5).isActive  = true
+            myView.bottomAnchor.constraint(equalTo: (self.yourTextField.topAnchor), constant: -5).isActive       = true
         case .bottom:
-            myView.topAnchor.constraint(equalTo: (self.yourTextField.bottomAnchor), constant: 5).isActive   = true
+            myView.topAnchor.constraint(equalTo: ((self.topLayerForMyView?.bottomAnchor)!), constant: 0).isActive   = true
             
         }
     }
@@ -220,12 +238,16 @@ public class myDropDownController: UIViewController {
         backgroundView = UIView(frame: CGRect(x: 0, y: 0, width: yourView.frame.size.width, height: yourView.frame.size.height))
         if self.yourView.viewWithTag(99)  == nil {
             backgroundView?.alpha       = 0
-            yourView.insertSubview(backgroundView!, at: 0)
             
+            topLayerForMyView?.tag
             backgroundView?.tag             = 99
+            
+            yourView.insertSubview(backgroundView!, at: 0)
+//            yourView.addSubview(topLayerForMyView ?? UIView())
             backgroundView?.backgroundColor = UIColor.init(hexString:backgroundColor)
             backgroundView?.alpha           = backgroundAlpha
             
+            topLayerForMyView?.alpha        = 1
             backgroundView?.layer.zPosition = 4
             
             let gesture:UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(viewTapped))
@@ -261,7 +283,9 @@ public class myDropDownController: UIViewController {
     private func dropDownHeightStatus() -> CGFloat{
         if dropDownStatus == .auto && snapDropDownPosition() == .bottom {
             
-            let dropDownAutoHeight  = self.yourView.frame.size.height - self.yourView.frame.origin.y - self.yourTextField.frame.size.height - 90 - (keyboardHeight ?? 0)
+            let topLayerHeight = CGFloat(self.topLayerForMyView?.frame.size.height ?? 0)
+            
+            let dropDownAutoHeight  = self.yourView.frame.size.height - topLayerHeight  - self.yourView.frame.origin.y - self.yourTextField.frame.size.height - 90 - (keyboardHeight ?? 0)
             
             
             return dropDownAutoHeight
@@ -277,11 +301,13 @@ public class myDropDownController: UIViewController {
         UIView.animate(withDuration: 0.3, delay:0, options: [dropDownAnimation], animations: {
                 if status{
                     self.backgroundView?.alpha               = self.backgroundAlpha
+                    self.topLayerForMyView?.alpha            = 1
                     self.privateWillOpen()
                     self.dropDownHeightConstant?.constant    = self.dropDownHeightStatus()
                     self.privateDidLoad()
                     self.viewBackground()
                 }else{
+                    self.topLayerForMyView?.alpha            = 0
                     self.dropDownHeightConstant?.constant    = 0
                     self.privateDidClose()
                 }
@@ -487,3 +513,32 @@ extension UIView {
     }
 }
 
+
+class TriangleLayer: CAShapeLayer {
+    
+    let innerPadding: CGFloat = 30.0
+    
+    override init() {
+        super.init()
+        fillColor   = UIColor.white.cgColor
+        strokeColor = UIColor.white.cgColor
+        lineWidth   = 1.0
+        lineCap     = kCALineCapRound
+        lineJoin    = kCALineJoinRound
+        path        = trianglePathSmall.cgPath
+    
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    var trianglePathSmall: UIBezierPath {
+        let trianglePath = UIBezierPath()
+        trianglePath.move(to: CGPoint(x: 5 , y: 17))     // #1
+        trianglePath.addLine(to: CGPoint(x: 20.0, y: 5)) // #2
+        trianglePath.addLine(to: CGPoint(x: 35.0, y: 17.0)) // #3
+        trianglePath.close()
+        return trianglePath
+    }
+}
